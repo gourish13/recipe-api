@@ -16,9 +16,12 @@ ARG DEV=false
 
 RUN python -m venv /python && \
     /python/bin/pip install --upgrade pip && \
+    apk add --update --no-cache postgresql-client && \
+    apk add --update --no-cache --virtual .tmp-build-deps build-base postgresql-dev musl-dev && \
     /python/bin/pip install -r /tmp/requirements.txt && \
     ([ $DEV == "true" ] && /python/bin/pip install -r /tmp/requirements.dev.txt) && \
     rm -rf /tmp && \
+    apk del .tmp-build-deps && \
     adduser \
     --disabled-password \
     --no-create-home \
